@@ -197,7 +197,7 @@ def rule_match(state, rules):
 # ______________________________________________________________________________
 
 
-loc_A, loc_B = (0, 0), (1, 0)  # The two locations for the Vacuum world
+loc_A, loc_B = 0, 1  # The two locations for the Vacuum world
 
 
 def RandomVacuumAgent():

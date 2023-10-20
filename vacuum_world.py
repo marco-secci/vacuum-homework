@@ -1,5 +1,6 @@
 from agents import *
 
+loc_A, loc_B = 0, 1
 class TrivialVacuumEnvironment(Environment):
     """This environment has two locations, A and B. Each can be Dirty
     or Clean. The agent perceives its location and the location's
@@ -8,6 +9,11 @@ class TrivialVacuumEnvironment(Environment):
 
     def __init__(self):
         super().__init__()
+        self.status = {
+            loc_A: "Clean",
+            loc_B: "Clean"
+        }
+        
 
     def thing_classes(self):
         return [
@@ -51,7 +57,7 @@ def SimpleReflexAgentProgram():
     """This agent takes action based solely on the percept. [Figure 2.10]"""
     
     def program(percept):
-        loc, status = percept()
+        loc, status = percept
         return ('Suck' if status == 'Dirty' 
                 else'Right' if loc == loc_A 
                             else'Left')
@@ -62,56 +68,43 @@ def SimpleReflexAgentProgram():
 program = SimpleReflexAgentProgram()
 simple_reflex_agent = Agent(program)
 
-
-
+trivial_vacuum_env.add_thing(simple_reflex_agent)
+total_score=0
 for p in range(2):
-    trivial_vacuum_env.add_thing(simple_reflex_agent)
-    simple_reflex_agent.location = p
     if p == 0:
-        action = 'Right'
-    else:
-        action = 'Left'
-    print("SimpleReflexVacuumAgent is located at {}.".format(simple_reflex_agent.location))
+        simple_reflex_agent.location = loc_A
+    elif p == 1:
+        simple_reflex_agent.location = loc_B
     for i in range(2):
+        if i == 0:
+            trivial_vacuum_env.status[loc_A] = "Clean"
+        elif i == 1:
+            trivial_vacuum_env.status[loc_A] = "Dirty"
         for j in range(2):
-            # Run the environment
-            trivial_vacuum_env.performance_score(i, j, simple_reflex_agent, action='Right')
-            
+            if j == 0:
+                trivial_vacuum_env.status[loc_B] = "Clean"
+            elif j == 1:
+                trivial_vacuum_env.status[loc_B] = "Dirty"
+            # Location of the agent 
+            print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
+
             # Check the current state of the environment
-            print("State of the Environment: {}.".format(trivial_vacuum_env.status))
+            print(f"State of the Environment: {trivial_vacuum_env.status}.\\n")
 
-            print("SimpleReflexVacuumAgent is located at {}.".format(simple_reflex_agent.location))
+            # Run the environment
+            trivial_vacuum_env.step()
 
-            # Delete the previously added simple reflex agent
-            trivial_vacuum_env.delete_thing(simple_reflex_agent)
+            # Performance score after one step
+            print(f"The score of the agent is {simple_reflex_agent.performance}.\n")
+            total_score+= simple_reflex_agent.performance
 
+            # New location of the agent after one step
+            print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
 
+            # trivial_vacuum_env.delete_thing(simple_reflex_agent)
 
+# Average score
 
+print(f" The avarage score of the agent is: {total_score/8}.")
 
-
-
-
-
-
-
-
-# # TODO: Implement this function for the two-dimensional environment
-# def update_state(state, action, percept, model):
-#     pass
-
-# # Create a model-based reflex agent
-# model_based_reflex_agent = ModelBasedVacuumAgent()
-
-# # Add the agent to the environment
-# trivial_vacuum_env.add_thing(model_based_reflex_agent)
-
-# print("ModelBasedVacuumAgent is located at {}.".format(model_based_reflex_agent.location))
-
-# # Run the environment
-# trivial_vacuum_env.step()
-
-# # Check the current state of the environment
-# print("State of the Environment: {}.".format(trivial_vacuum_env.status))
-
-# print("ModelBasedVacuumAgent is located at {}.".format(model_based_reflex_agent.location))
+print( trivial_vacuum_env.status)
