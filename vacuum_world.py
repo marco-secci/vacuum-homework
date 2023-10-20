@@ -69,42 +69,49 @@ program = SimpleReflexAgentProgram()
 simple_reflex_agent = Agent(program)
 
 trivial_vacuum_env.add_thing(simple_reflex_agent)
-total_score=0
+total_score = 0.0
 for p in range(2):
     if p == 0:
         simple_reflex_agent.location = loc_A
     elif p == 1:
         simple_reflex_agent.location = loc_B
     for i in range(2):
-        if i == 0:
-            trivial_vacuum_env.status[loc_A] = "Clean"
-        elif i == 1:
-            trivial_vacuum_env.status[loc_A] = "Dirty"
         for j in range(2):
+            if p == 0:
+                simple_reflex_agent.location = loc_A
+            else:
+                simple_reflex_agent.location = loc_B
+    
             if j == 0:
                 trivial_vacuum_env.status[loc_B] = "Clean"
-            elif j == 1:
+            else:
                 trivial_vacuum_env.status[loc_B] = "Dirty"
+            if i == 0:
+                trivial_vacuum_env.status[loc_A] = "Clean"
+            else:
+                trivial_vacuum_env.status[loc_A] = "Dirty"
             # Location of the agent 
-            print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
+            #print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
 
             # Check the current state of the environment
-            print(f"State of the Environment: {trivial_vacuum_env.status}.\\n")
+            print(f"State of the Environment: {trivial_vacuum_env.status}.\n")
+            
+
+            #print(f"Siamo nel caso:{p, i, j}")
 
             # Run the environment
             trivial_vacuum_env.step()
 
             # Performance score after one step
             print(f"The score of the agent is {simple_reflex_agent.performance}.\n")
-            total_score+= simple_reflex_agent.performance
+            total_score = total_score + simple_reflex_agent.performance
+            simple_reflex_agent.performance = 0
 
             # New location of the agent after one step
             print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
 
-            # trivial_vacuum_env.delete_thing(simple_reflex_agent)
 
+            
 # Average score
 
 print(f" The avarage score of the agent is: {total_score/8}.")
-
-print( trivial_vacuum_env.status)
