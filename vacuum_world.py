@@ -91,7 +91,7 @@ for p in range(2):
             else:
                 trivial_vacuum_env.status[loc_A] = "Dirty"
             # Location of the agent 
-            #print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
+            print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
 
             # Check the current state of the environment
             print(f"State of the Environment: {trivial_vacuum_env.status}.\n")
@@ -108,7 +108,7 @@ for p in range(2):
             simple_reflex_agent.performance = 0
 
             # New location of the agent after one step
-            print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
+            #print(f"SimpleReflexVacuumAgent is located at {simple_reflex_agent.location}.\n")
 
 
             
