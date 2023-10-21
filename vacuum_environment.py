@@ -7,13 +7,34 @@ from vacuum_world import SimpleReflexAgentProgram, program
 from agents import *
 
 # Defining the values a square of the room can have:
-strings = ["Clean", "Dirty", "Obstacle"]
 
 
 # =========== #
 # ROOM METHOD #
 # =========== #
-def rooms(x, y):
+def rooms(x: int, y: int, strings: list[str]):
+    """
+    ## `rooms` method
+
+    ==================================
+
+    #### Description
+    Takes as input the two dimensions of the room and creates one accordingly with random status
+    for every cell, chosen between "Clean", "Dirty" and "Obstacle".
+
+    ==================================
+
+    #### Parameters
+
+    #### - `x`: `int`
+    Room's dimension on the `x` axis.
+
+    #### - `y`: `int`
+    Room's dimension on the `y` axis.
+
+    #### - `strings`: `list[str]`
+    The list of strings that will be used to randomly assign a value to every cell of the room.
+    """
     # Creating matrix with random values chosen between the three above:
     matrix = np.random.choice(strings, size=(x, y))
 
@@ -77,11 +98,30 @@ def rooms(x, y):
     # plt.xlabel("")
     # plt.ylabel("")
     # plt.show()
-    print(matrix)
+    # print(matrix)
     return matrix
 
 
-def rooms_keychain(matrix):
+# ===================== #
+# ROOMS KEYCHAIN METHOD #
+# ===================== #
+def rooms_keychain(matrix: np.ndarray):
+    """
+    ## `rooms_keychain` method
+
+    ==================================
+
+    #### Description
+    Returns a dictionary with a different key for every cell. If two cells have the same status, they're key
+    will still be different.
+
+    ==================================
+
+    #### Parameters
+
+    #### - `matrix` : `ndarray`
+    The matrix for which the keychain will be created.
+    """
     # Create an empty dictionary to to store the matrix with unique keys:
     matrix_dict = {}
 
@@ -95,7 +135,46 @@ def rooms_keychain(matrix):
     return matrix_dict
 
 
-random_matrix = rooms(4, 4)
+# ====================== #
+# KEYCHAIN MATRIX METHOD #
+# ====================== #
+def keychain_matrix(keychain: dict, matrix: np.ndarray):
+    """
+    ## `keychain_matrix` method
 
-resulting_dict = rooms_keychain(random_matrix)
-print(resulting_dict)
+    ==================================
+
+    #### Description
+    Uses a matrix created with the `rooms` method, a keychain created with the `rooms_keychain` method,
+    and creates a matrix of the same dimension of the room, with in each cell the key corresponding to the room's
+    cell.
+
+    #### Parameters
+
+    #### - `keychain`: `dict`
+    The dictionary of all keys assigned to cells in the room.
+
+    #### - `matrix` `np.ndarray`
+    The room matrix created for which the keychain has been made.
+    """
+    key_matrix = matrix  # Placeholder because np.empty_like does not work properly
+    list_keys = list(keychain.keys())
+    # Counter for the cell we are in:
+    counter = 0
+    # Iterating through every cell:
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            # Creating the new matrix:
+            key_matrix[i, j] = list_keys[counter]
+            counter += 1
+    return key_matrix
+
+
+if __name__ == "__main__":
+    strings = ["Clean", "Dirty", "Obstacle"]
+    random_matrix = rooms(4, 4)
+
+    resulting_dict = rooms_keychain(random_matrix)
+    key_matrix = keychain_matrix(resulting_dict, random_matrix)
+    print(resulting_dict)
+    print(key_matrix)
