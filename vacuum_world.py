@@ -41,16 +41,8 @@ class TrivialVacuumEnvironment(Environment):
                 agent.performance += 10
             self.status[agent.location] = "Clean"
 
-    def performance_score(self, i, j, agent, action):
-
-        self.status = [loc_A[i], loc_B[j]]
-
-        self.execute_action(agent, action)
-        print(agent.performance)
-
 # Initialize the two-state environment
 trivial_vacuum_env = TrivialVacuumEnvironment()
-
 
 """We change the simpleReflexAgentProgram so that it doesn't make use of the Rule class"""
 def SimpleReflexAgentProgram():
@@ -63,7 +55,6 @@ def SimpleReflexAgentProgram():
                             else'Left')
     return program
 
-        
 # Create a simple reflex agent the two-state environment
 program = SimpleReflexAgentProgram()
 simple_reflex_agent = Agent(program)
@@ -114,4 +105,4 @@ for p in range(2):
             
 # Average score
 
-print(f" The avarage score of the agent is: {total_score/8}.")
+print(f" The average score of the agent is: {total_score/8}.")
