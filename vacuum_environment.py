@@ -172,7 +172,7 @@ def keychain_matrix(keychain: dict, matrix: np.ndarray):
 
 if __name__ == "__main__":
     strings = ["Clean", "Dirty", "Obstacle"]
-    random_matrix = rooms(4, 4)
+    random_matrix = rooms(4, 4, strings)
 
     resulting_dict = rooms_keychain(random_matrix)
     key_matrix = keychain_matrix(resulting_dict, random_matrix)
