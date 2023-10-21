@@ -4,7 +4,7 @@ import numpy as np
 import vacuum_agent
 from agents import *
 from vacuum_world import SimpleReflexAgentProgram, program
-from vacuum_environment import room
+from vacuum_environment import rooms, rooms_keychain
 
 
 # ====================================== #
@@ -25,11 +25,11 @@ class BidimensionalVacuumEnvironment(Environment):
         self.x = x
         self.y = y
         # Create rooms:
-        self.matrix = room(self.x, self.y)
+        self.matrix = rooms(self.x, self.y)
         # rooms statuses list:
 
         # Create dictionary with rooms' statuses:
-        self.status = {}
+        self.status = rooms_keychain(self.matrix)
 
     # ==================== #
     # THING CLASSES METHOD #

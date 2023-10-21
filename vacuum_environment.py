@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import random
+import string
 
 from vacuum_world import SimpleReflexAgentProgram, program
 from agents import *
@@ -11,7 +13,7 @@ strings = ["Clean", "Dirty", "Obstacle"]
 # =========== #
 # ROOM METHOD #
 # =========== #
-def room(x, y):
+def rooms(x, y):
     # Creating matrix with random values chosen between the three above:
     matrix = np.random.choice(strings, size=(x, y))
 
@@ -69,7 +71,6 @@ def room(x, y):
                     and matrix[i][j + 1] != "Clean"
                 ):
                     matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-
     # Creating cool visualization of the room
     # plt.imshow(matrix, "Paired")
     # plt.colorbar()
@@ -80,4 +81,21 @@ def room(x, y):
     return matrix
 
 
-room(4, 4)
+def rooms_keychain(matrix):
+    # Create an empty dictionary to to store the matrix with unique keys:
+    matrix_dict = {}
+
+    # Iterating through the matrix and assign unique keys:
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            value = matrix[i, j]
+            key = "".join(random.choices(string.ascii_uppercase, k=5))
+            matrix_dict.__setitem__(key, value)
+
+    return matrix_dict
+
+
+random_matrix = rooms(4, 4)
+
+resulting_dict = rooms_keychain(random_matrix)
+print(resulting_dict)
