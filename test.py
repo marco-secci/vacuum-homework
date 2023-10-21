@@ -21,8 +21,8 @@ def create_unique_keys_matrix_dict(matrix):
         for j in range(matrix.shape[1]):
             value = matrix[i, j]  # Questo è uno tra Clean Dirty e Obstacle
             key = key_mapping[
-                value
-            ]  # Questo dovrebbe essere un numero da 0 a 15 e mai lo stesso
+                value  # Questo dovrebbe essere un numero da 0 a 15 e mai lo stesso
+            ]
             matrix_dict.__setitem__(key, value)
 
     return matrix_dict
