@@ -94,4 +94,4 @@ if __name__ == "__main__":
     env = BidimensionalVacuumEnvironment()
     vacuum = Agent(program)
 
-    print(room(4, 4))
+    print(rooms(4, 4, strings=["Clean", "Dirty", "Obstacle"]))
