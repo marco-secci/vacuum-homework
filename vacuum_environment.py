@@ -9,9 +9,9 @@ from agents import *
 # Defining the values a square of the room can have:
 
 
-# =========== #
-# ROOM METHOD #
-# =========== #
+# ============ #
+# ROOMS METHOD #
+# ============ #
 def rooms(x: int, y: int, strings: list[str]):
     """
     ## `rooms` method
@@ -19,8 +19,8 @@ def rooms(x: int, y: int, strings: list[str]):
     ==================================
 
     #### Description
-    Takes as input the two dimensions of the room and creates one accordingly with random status
-    for every cell, chosen between "Clean", "Dirty" and "Obstacle".
+
+    Takes as input the two dimensions of the room and creates one accordingly with random status for every cell, chosen between "Clean", "Dirty" and "Obstacle". Every cell touching other two squares that are either Clean or Dirty at directions North, West, South, or East.
 
     ==================================
 
@@ -38,60 +38,101 @@ def rooms(x: int, y: int, strings: list[str]):
     # Creating matrix with random values chosen between the three above:
     matrix = np.random.choice(strings, size=(x, y))
 
-    # We do not want Non-Obstacle squares to be isolated:
-    # Loop through the matrix and replace "Clean" or "Dirty" elements that do not have an adjacent square of the same type with a random value chosen between "Clean" and "Dirty"
+    # Loop through the matrix and replace "Clean" or "Dirty" elements that do not have two adjacent squares of the same type with a random value chosen between "Clean" and "Dirty"
     for i in range(x):
         for j in range(y):
             if matrix[i][j] == "Clean":
-                if (
-                    i > 0
-                    and matrix[i - 1][j] != "Clean"
-                    and matrix[i - 1][j] != "Dirty"
-                ):
-                    matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-                elif (
-                    i < 3
-                    and matrix[i + 1][j] != "Clean"
-                    and matrix[i + 1][j] != "Dirty"
-                ):
-                    matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-                elif (
-                    j > 0
-                    and matrix[i][j - 1] != "Clean"
-                    and matrix[i][j - 1] != "Dirty"
-                ):
-                    matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-                elif (
-                    j < 3
-                    and matrix[i][j + 1] != "Clean"
-                    and matrix[i][j + 1] != "Dirty"
-                ):
+                adjacent_one = False
+                adjacent_two = False
+                if i > 0 and matrix[i - 1][j] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif i < x - 1 and matrix[i + 1][j] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j > 0 and matrix[i][j - 1] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j < y - 1 and matrix[i][j + 1] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                if i > 0 and matrix[i - 1][j] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif i < x - 1 and matrix[i + 1][j] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j > 0 and matrix[i][j - 1] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j < y - 1 and matrix[i][j + 1] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                if not adjacent_one or not adjacent_two:
                     matrix[i][j] = np.random.choice(["Clean", "Dirty"])
             elif matrix[i][j] == "Dirty":
-                if (
-                    i > 0
-                    and matrix[i - 1][j] != "Dirty"
-                    and matrix[i - 1][j] != "Clean"
-                ):
+                adjacent_one = False
+                adjacent_two = False
+                if i > 0 and matrix[i - 1][j] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif i < x - 1 and matrix[i + 1][j] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j > 0 and matrix[i][j - 1] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j < y - 1 and matrix[i][j + 1] == "Clean":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                if i > 0 and matrix[i - 1][j] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif i < x - 1 and matrix[i + 1][j] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j > 0 and matrix[i][j - 1] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                elif j < y - 1 and matrix[i][j + 1] == "Dirty":
+                    if adjacent_one == False:
+                        adjacent_one = True
+                    elif adjacent_two == False:
+                        adjacent_two = True
+                if not adjacent_one or not adjacent_two:
                     matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-                elif (
-                    i < 3
-                    and matrix[i + 1][j] != "Dirty"
-                    and matrix[i + 1][j] != "Clean"
-                ):
-                    matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-                elif (
-                    j > 0
-                    and matrix[i][j - 1] != "Dirty"
-                    and matrix[i][j - 1] != "Clean"
-                ):
-                    matrix[i][j] = np.random.choice(["Clean", "Dirty"])
-                elif (
-                    j < 3
-                    and matrix[i][j + 1] != "Dirty"
-                    and matrix[i][j + 1] != "Clean"
-                ):
-                    matrix[i][j] = np.random.choice(["Clean", "Dirty"])
+
+    return matrix
     # Creating cool visualization of the room
     # plt.imshow(matrix, "Paired")
     # plt.colorbar()
@@ -99,7 +140,6 @@ def rooms(x: int, y: int, strings: list[str]):
     # plt.ylabel("")
     # plt.show()
     # print(matrix)
-    return matrix
 
 
 # ===================== #
