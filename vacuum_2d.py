@@ -1,4 +1,7 @@
 import numpy as np
+import random
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 
 # ============ #
@@ -128,10 +131,11 @@ class BidimensionalVacuumAgent:
 
     def vacuum_agent(self):
         # Create a 2D array with the specified dimensions and strings:
-        print(f"The room is {self.env}")
+        print(f"The room is: \n {self.env}")
         # Choose a random starting position for the agent:
         # Create a list of valid positions that are not obstacles
         valid_positions = []
+        # Room current status:
 
         for i in range(self.x):
             for j in range(self.y):
@@ -144,15 +148,15 @@ class BidimensionalVacuumAgent:
                 at random choosing among three values composed of only one of these three elements, I'd go play some scratch cards if I were you.
                 Now, let's re-run the script: """
             )
-            return self.vacuum_agent(
-                self.x, self.y
-            )  # Abort if there are no valid positions.
+            return []
 
         # Choose a random starting position for the agent from valid positions:
         self.agent_pos = random.choice(valid_positions)
         # Loop until all cells are either Clean or Obstacle:
 
     def movement(self):
+        room_history = [self.env.copy()]
+        agent_history = [self.agent_pos]
         while True:
             # Get the value of the current cell:
             current_cell = self.env[self.agent_pos]
@@ -163,8 +167,15 @@ class BidimensionalVacuumAgent:
             # If the cell is Dirty, clean it:
             if current_cell == "Dirty":
                 self.env[self.agent_pos] = "Clean"
+
+                # Register position for final animation:
+                room_history.append(self.env.copy())
+                agent_history.append(self.agent_pos)
+
                 print(f"Cleaned cell {self.agent_pos}")
-                self.performance += 10
+
+                # Register performance value:
+                self.performance += 15
 
             # If the cell is Clean, check adjacent cells for Dirty cells:
             elif current_cell == "Clean":
@@ -217,8 +228,14 @@ class BidimensionalVacuumAgent:
                     )
                     self.env[self.agent_pos] = "Clean"
                     self.agent_pos = dirty_pos
+
+                    # Register current status of the environment for final animation:
+                    room_history.append(self.env.copy())
+                    agent_history.append(self.agent_pos)
                     print(f"Moved to cell {self.agent_pos}")
-                    self.performance -= 1
+
+                    # Register performance:
+                    self.performance -= 0.6
 
                 else:
                     # Find a random cell that is not an Obstacle and move to it:
@@ -261,14 +278,59 @@ class BidimensionalVacuumAgent:
                         elif action == "East":
                             self.agent_pos = (self.agent_pos[0], self.agent_pos[1] + 1)
                         print(f"Executing action {action}...")
-                        self.performance -= 1
+                        print(f"Moved to cell {self.agent_pos}")
+
+                        # Registering performance:
+                        self.performance -= 0.6
+
+            # Registering positions:
+            room_history.append(self.env.copy())
+            agent_history.append(self.agent_pos)
 
             # If all cells are Clean or Obstacle, break out of the loop:
             if np.all(np.isin(self.env, ["Clean", "Obstacle"])):
                 break
 
         print("All cells are Clean or Obstacle")
-        return
+        return room_history, agent_history
+
+
+def visualize_animation(room_history, agent_history):
+    fig, ax = plt.subplots()
+    ims = []
+
+    # Create a mapping from string values to numerical values
+    value_map = {"Clean": 0, "Dirty": 1, "Obstacle": 2}
+
+    # Remove the initial empty frame, and start with the actual room state
+    room_history.pop(0)
+    agent_history.pop(0)
+
+    for room, agent_pos in zip(room_history, agent_history):
+        # Convert the room data to numerical representation using the mapping
+        room_numeric = np.vectorize(value_map.get)(room)
+
+        # Create an image with the room state
+        im = ax.imshow(
+            room_numeric,
+            cmap="viridis",
+            interpolation="none",
+        )
+
+        # Highlight the agent's position with a dot
+        ax.plot(agent_pos[1], agent_pos[0], "ro", markersize=10)
+
+        ims.append([im])
+
+    ani = FuncAnimation(
+        fig,
+        lambda x: x,
+        frames=ims,
+        interval=1000,  # Adjust the interval for the animation speed
+        blit=True,
+    )
+
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -277,7 +339,10 @@ if __name__ == "__main__":
 
     vacuum = BidimensionalVacuumAgent(random_matrix)
     vacuum.vacuum_agent()
-    vacuum.movement()
+    room_history, agent_history = vacuum.movement()
+    visualize_animation(room_history, agent_history)
     print(
-        f"The vacuum has finished its job. Its performance score is {vacuum.performance}. "
+        f"The vacuum has finished its job. Its performance score is {round(vacuum.performance, 3)}."
     )
+
+    # Visualize the animation
