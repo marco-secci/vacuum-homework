@@ -129,7 +129,7 @@ class BidimensionalVacuumAgent:
         self.y = env.shape[1]
         self.env = env
 
-    def agent_drop(self):
+    def vacuum_agent(self):
         # Create a 2D array with the specified dimensions and strings:
         print(f"The room is: \n {self.env}")
         # Choose a random starting position for the agent:
@@ -152,6 +152,7 @@ class BidimensionalVacuumAgent:
 
         # Choose a random starting position for the agent from valid positions:
         self.agent_pos = random.choice(valid_positions)
+        # Loop until all cells are either Clean or Obstacle:
 
     def movement(self):
         room_history = [self.env.copy()]
@@ -174,7 +175,7 @@ class BidimensionalVacuumAgent:
                 print(f"Cleaned cell {self.agent_pos}")
 
                 # Register performance value:
-                self.performance += 15
+                self.performance += 12.5
 
             # If the cell is Clean, check adjacent cells for Dirty cells:
             elif current_cell == "Clean":
@@ -234,7 +235,7 @@ class BidimensionalVacuumAgent:
                     print(f"Moved to cell {self.agent_pos}")
 
                     # Register performance:
-                    self.performance -= 0.6
+                    self.performance -= 0.5
 
                 else:
                     # Find a random cell that is not an Obstacle and move to it:
@@ -301,27 +302,38 @@ def visualize_animation(room_history, agent_history):
     # Create a mapping from string values to numerical values
     value_map = {"Clean": 0, "Dirty": 1, "Obstacle": 2}
 
-    for room, agent_pos in zip(room_history, agent_history):
+    # Remove the initial empty frame, and start with the actual room state
+    room_history.pop(0)
+    agent_history.pop(0)
+
+    # Initialize the dot object
+    (dot,) = ax.plot([], [], "ro", markersize=10)
+
+    def update(frame):
+        # Get the room and agent position for the current frame
+        room = room_history[frame]
+        agent_pos = agent_history[frame]
+
         # Convert the room data to numerical representation using the mapping
         room_numeric = np.vectorize(value_map.get)(room)
 
-        # Create an image with the room state
+        # Update the image with the room state
         im = ax.imshow(
             room_numeric,
             cmap="viridis",
             interpolation="none",
         )
 
-        # Highlight the agent's position with a dot
-        ax.plot(agent_pos[1], agent_pos[0], "ro", markersize=10)
+        # Update the position of the dot
+        dot.set_data(agent_pos[1], agent_pos[0])
 
-        ims.append([im])
+        return [im, dot]
 
     ani = FuncAnimation(
         fig,
-        lambda x: x,
+        update,
         frames=len(room_history),
-        interval=1000,  # Adjust the interval for the animation speed
+        interval=150,  # Adjust the interval for the animation speed
         blit=True,
     )
 
@@ -333,7 +345,7 @@ if __name__ == "__main__":
     random_matrix = rooms(4, 4, strings)
 
     vacuum = BidimensionalVacuumAgent(random_matrix)
-    vacuum.agent_drop()
+    vacuum.vacuum_agent()
     room_history, agent_history = vacuum.movement()
     print(
         f"The vacuum has finished its job. Its performance score is {round(vacuum.performance, 3)}."
