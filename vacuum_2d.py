@@ -129,7 +129,7 @@ class BidimensionalVacuumAgent:
         self.y = env.shape[1]
         self.env = env
 
-    def vacuum_agent(self):
+    def agent_drop(self):
         # Create a 2D array with the specified dimensions and strings:
         print(f"The room is: \n {self.env}")
         # Choose a random starting position for the agent:
@@ -152,7 +152,6 @@ class BidimensionalVacuumAgent:
 
         # Choose a random starting position for the agent from valid positions:
         self.agent_pos = random.choice(valid_positions)
-        # Loop until all cells are either Clean or Obstacle:
 
     def movement(self):
         room_history = [self.env.copy()]
@@ -302,10 +301,6 @@ def visualize_animation(room_history, agent_history):
     # Create a mapping from string values to numerical values
     value_map = {"Clean": 0, "Dirty": 1, "Obstacle": 2}
 
-    # Remove the initial empty frame, and start with the actual room state
-    room_history.pop(0)
-    agent_history.pop(0)
-
     for room, agent_pos in zip(room_history, agent_history):
         # Convert the room data to numerical representation using the mapping
         room_numeric = np.vectorize(value_map.get)(room)
@@ -325,7 +320,7 @@ def visualize_animation(room_history, agent_history):
     ani = FuncAnimation(
         fig,
         lambda x: x,
-        frames=ims,
+        frames=len(room_history),
         interval=1000,  # Adjust the interval for the animation speed
         blit=True,
     )
@@ -338,11 +333,11 @@ if __name__ == "__main__":
     random_matrix = rooms(4, 4, strings)
 
     vacuum = BidimensionalVacuumAgent(random_matrix)
-    vacuum.vacuum_agent()
+    vacuum.agent_drop()
     room_history, agent_history = vacuum.movement()
-    visualize_animation(room_history, agent_history)
     print(
         f"The vacuum has finished its job. Its performance score is {round(vacuum.performance, 3)}."
     )
 
     # Visualize the animation
+    visualize_animation(room_history, agent_history)
